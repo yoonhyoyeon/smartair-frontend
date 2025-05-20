@@ -29,6 +29,18 @@ function Login() {
         },
         body: JSON.stringify({ email, password }),
       });
+      
+      // 응답 상태 확인
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('API 응답 에러:', {
+          status: response.status,
+          statusText: response.statusText,
+          body: errorText
+        });
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
       const data = await response.json();
       
       // localStorage에 토큰 저장

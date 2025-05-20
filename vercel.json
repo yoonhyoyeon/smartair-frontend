@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "https://your-backend-api.com/:path*"
+      "destination": "https://smartair.site/:path*"
     }
   ]
 } 
