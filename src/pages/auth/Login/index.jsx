@@ -21,27 +21,14 @@ function Login() {
     const email = e.target.email.value;
     const password = e.target.password.value;
     try {
-      const response = await fetch('https://smartair.site/login', {
+      const response = await fetch('/api/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'accept': '*/*'
         },
         body: JSON.stringify({ email, password }),
-        credentials: 'include'  // 쿠키 포함
       });
-      
-      // 응답 상태 확인
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error('API 응답 에러:', {
-          status: response.status,
-          statusText: response.statusText,
-          body: errorText
-        });
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      
       const data = await response.json();
       
       // localStorage에 토큰 저장
