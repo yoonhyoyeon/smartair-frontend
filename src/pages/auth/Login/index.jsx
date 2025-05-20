@@ -21,7 +21,7 @@ function Login() {
     const email = e.target.email.value;
     const password = e.target.password.value;
     try {
-      const response = await fetch('api/login', {
+      const response = await fetch('/api/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -24,7 +24,7 @@ function Login() {
       return;
     }
     try {
-      const response = await fetch('api/join', {
+      const response = await fetch('/api/join', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
