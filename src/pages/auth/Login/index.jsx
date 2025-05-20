@@ -21,13 +21,14 @@ function Login() {
     const email = e.target.email.value;
     const password = e.target.password.value;
     try {
-      const response = await fetch('/api/login', {
+      const response = await fetch('https://smartair.site/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'accept': '*/*'
         },
         body: JSON.stringify({ email, password }),
+        credentials: 'include'  // 쿠키 포함
       });
       
       // 응답 상태 확인
