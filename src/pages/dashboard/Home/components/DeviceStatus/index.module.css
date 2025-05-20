@@ -1,0 +1,63 @@
+.container {
+    background-color: var(--color-black);
+    color: var(--color-gray-0);
+    border-radius: 10px;
+    padding: 30px;
+    flex: 1;
+}
+.container .header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.container .header h1 {
+    font-size: 20px;
+    font-weight: 500;
+    margin:0;
+    margin-right: 12px;
+}
+.container .content {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+.container .content .DeviceStatusItem {
+    position: relative;
+    background-color: #2D2D2D;
+    border-radius: 4px;
+    padding: 20px;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+.container .content .DeviceStatusItem:hover {
+    color: #aeaeae;
+}
+.container .content .DeviceStatusItem .name {
+    display: block;
+    font-size: 20px;
+    font-weight: 500;
+    margin-bottom: 10px;
+}
+.container .content .DeviceStatusItem .room {
+    display: block;
+    font-size: 12px;
+    font-weight: 500;
+}
+.container .content .DeviceStatusItem .power {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: rgba(255, 255, 255, 0.24);
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.container .content .DeviceStatusItem.active {
+    background-color: var(--color-blue-0);
+}
+.container .content .DeviceStatusItem.active {
+    color: #E6E6E6;
+}

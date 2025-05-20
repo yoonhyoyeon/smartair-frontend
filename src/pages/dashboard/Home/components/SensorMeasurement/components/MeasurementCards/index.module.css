@@ -1,0 +1,41 @@
+.container .main_area {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+    margin-bottom: 6px;
+}
+
+.container .sub_area {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+}
+.container .main_area .card {
+    background-color: #27272D;
+}
+.container .card {
+    color: #E6E6E6;
+    background-color: #222225;
+    border-radius: 4px;
+    padding: 10px;
+    text-align: center;
+}
+.container .card h1 {
+    font-size: 12px;
+    font-weight: 700;
+    margin: 0;
+}
+.container .card .value {
+    display: block;
+    font-size: 24px;
+    color: var(--color-green-0);
+    font-weight: 700;
+    margin: 12px 0;
+}
+.container .card .sub_value {
+    font-size: 10px;
+    font-weight: 700;
+}
+.container .card .sub_value span {
+    margin: 0 5px;
+}

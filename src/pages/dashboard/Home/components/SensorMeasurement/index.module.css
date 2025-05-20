@@ -1,0 +1,41 @@
+.container {
+    background-color: var(--color-black);
+    color: var(--color-gray-0);
+    border-radius: 10px;
+    padding: 30px;
+    flex: 1;
+}
+.container .header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.container .header h1 {
+    font-size: 20px;
+    font-weight: 500;
+    margin:0;
+    margin-right: 12px;
+}
+.container .select_area {
+    margin-bottom: 20px;
+}
+.container .select_area select {
+    color: #E4E6EA;
+    background-color: #202024;
+    border: 0;
+    border-radius: 4px;
+    padding: 10px 20px;
+    margin-right: 10px;
+}
+
+.container .content {
+    display: flex;
+}
+.container .content .left {
+    flex: 1;
+    padding-right: 20px;
+    border-right: 1px solid #2D2D2D;
+}
+.container .content .right {
+    flex: 1;
+}

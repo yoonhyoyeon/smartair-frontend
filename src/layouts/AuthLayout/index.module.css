@@ -1,0 +1,33 @@
+.container {
+    display: flex;
+    height: 100vh;
+    background: #181A20;
+    padding: 0 40px;
+}
+
+.left {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.left img {
+    width: 270px;
+}
+
+.right {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.fadeWrap {
+  animation: fadeIn .7s;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px);}
+  to   { opacity: 1; transform: translateY(0);}
+}
+

@@ -1,0 +1,12 @@
+:root {
+    --bg-color: #1F1F23;
+    --color-black: #000000;
+
+    --color-blue-0: #004FFF;
+
+    --color-gray-0: #656565;
+
+    --color-green-0: rgba(52, 199, 89, 1);
+    --color-yellow-0: rgba(255, 204, 0, 1);
+    --color-red-0: rgba(255, 59, 48, 1);
+}

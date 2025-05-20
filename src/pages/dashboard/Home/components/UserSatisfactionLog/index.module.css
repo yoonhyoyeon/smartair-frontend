@@ -1,0 +1,53 @@
+.container {
+    background-color: var(--color-black);
+    color: var(--color-gray-0);
+    border-radius: 10px;
+    padding: 30px;
+    height: 100%;
+    box-sizing: border-box;
+}
+.container .header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.container .header h1 {
+    font-size: 20px;
+    font-weight: 500;
+    margin:0;
+    margin-right: 12px;
+}
+.container table {
+    width: 100%;
+    color: #E6E6E6;
+    border-collapse: collapse;
+}
+.container table tr {
+    display: flex;
+    border-bottom: 1px solid #2D2D2D;
+    height: 45px;
+    align-items: center;
+}
+.container table td {
+    flex: 1;
+    font-size: 18px;
+    text-align: left;
+    color: var(--color-gray-0);
+}
+.container table th {
+    flex: 1;
+    font-size: 16px;
+    font-weight: 500;
+    text-align: left;
+}
+.container table td:first-child, .container table th:first-child  {
+    flex: 2;
+}
+
+.container table td:last-child, .container table th:last-child  {
+    flex: none;
+    width: 40px;
+}
+.container table td:last-child svg {
+    cursor: pointer;
+}
