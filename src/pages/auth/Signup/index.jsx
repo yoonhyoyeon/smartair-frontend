@@ -19,13 +19,12 @@ function Login() {
     const nickname = e.target.nickname.value;
     const username = e.target.username.value;
     const role = 'USER';
-    const apiUrl = import.meta.env.VITE_API_URL;
     if (password !== passwordCheck) {
       alert('비밀번호가 일치하지 않습니다.');
       return;
     }
     try {
-      const response = await fetch(`${apiUrl}/join`, {
+      const response = await fetch('api/join', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
