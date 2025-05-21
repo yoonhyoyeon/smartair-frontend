@@ -4,52 +4,52 @@ import IconArrowRightCircle from '@/assets/images/IconArrowRightCircle.svg?react
 
 const data = [
     {
-        user: '사용자1',
+        roomName: '방1',
         aqi: 10,
         satisfaction: 50
     },
     {
-        user: '사용자2',
+        roomName: '방2',
         aqi: 20,
         satisfaction: 30
     },
     {
-        user: '사용자3',
+        roomName: '방3',
         aqi: 30,
         satisfaction: 70
     },
     {
-        user: '사용자4',
+        roomName: '방4',
         aqi: 40,
         satisfaction: 40
     },
     {
-        user: '사용자5',
+        roomName: '방5',
         aqi: 50,
         satisfaction: 60
     },
     {
-        user: '사용자6',
+        roomName: '방6',
         aqi: 60,
         satisfaction: 80
     },
     {
-        user: '사용자7',
+        roomName: '방7',
         aqi: 70,
         satisfaction: 90
     },
     {
-        user: '사용자8',
+        roomName: '방8',
         aqi: 80,
         satisfaction: 100
     },
     {
-        user: '사용자9',
+        roomName: '방9',
         aqi: 90,
         satisfaction: 100
     },
     {
-        user: '사용자10',
+        roomName: '방10',
         aqi: 100,
         satisfaction: 100
     }
@@ -64,7 +64,7 @@ const UserSatisfactionLog = () => {
             <table>
                 <thead>
                     <tr>
-                        <th>사용자</th>
+                        <th>방 이름</th>
                         <th>AQI</th>
                         <th>만족도(%)</th>
                         <th></th>
@@ -73,8 +73,8 @@ const UserSatisfactionLog = () => {
                 <tbody>
                     {
                         data.map((item, idx) => (
-                            <tr key={item.user+idx}>
-                                <td>{item.user}</td>
+                            <tr key={item.roomName}>
+                                <td>{item.roomName}</td>
                                 <td>{item.aqi}</td>
                                 <td>{item.satisfaction}</td>
                                 <td><IconArrowRightCircle /></td>

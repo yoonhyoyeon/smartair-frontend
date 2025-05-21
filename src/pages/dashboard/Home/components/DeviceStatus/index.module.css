@@ -61,3 +61,16 @@
 .container .content .DeviceStatusItem.active {
     color: #E6E6E6;
 }
+
+.container .selectBox {
+    display: flex;
+    margin-bottom: 20px;
+}
+.container .selectBox select {
+    color: #E4E6EA;
+    background-color: #202024;
+    border: 0;
+    border-radius: 4px;
+    padding: 10px 20px;
+    margin-right: 10px;
+}

@@ -1,11 +1,12 @@
 import styles from '../index.module.css';
-import { NavLink, Link } from 'react-router-dom';
+import { NavLink, Link, useNavigate } from 'react-router-dom';
 import IconHome from '@/assets/images/IconHome.svg?react';
 import IconAnalyze from '@/assets/images/IconAnalyze.svg?react';
 import IconMore from '@/assets/images/IconMore.svg?react';
 import logo from '@/assets/images/logo_simple.svg';
 
 const NavigationBar = () => {
+    const navigate = useNavigate();
     const handleLogout = () => {
         localStorage.removeItem('accessToken');
         localStorage.removeItem('refreshToken');
