@@ -6,10 +6,10 @@ import { useEffect, useState } from 'react';
 const DeviceStatus = () => {
     const [data, setData] = useState([]);
     const [roomId, setRoomId] = useState(817);
-    const apiUrl = import.meta.env.VITE_API_URL;
+
     useEffect(() => {
         const fetchData = async () => {
-            const response = await fetch(`${apiUrl}/thinq/devices`);
+            const response = await fetch(`/api/thinq/devices/${roomId}`);
             const data = await response.json();
             setData(data);
             console.log(data);
