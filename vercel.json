@@ -1,10 +1,10 @@
 {
   "rewrites": [
-    { "source": "/(.*)", "destination": "/" },
     {
-      "source": "/api/:path*",
-      "destination": "https://smartair.site/:path*"
-    }
+        "source": "/api/:path*",
+        "destination": "https://smartair.site/:path*"
+    },
+    { "source": "/(.*)", "destination": "/" }
   ],
   "headers": [
     {
