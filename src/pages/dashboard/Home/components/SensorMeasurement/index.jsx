@@ -1,6 +1,6 @@
 import styles from './index.module.css';
-import MeasurementCards from './components/MeasurementCards';
-import MeasurementGraph from './components/MeasurementGraph';
+import MeasurementCards from '@/components/MeasurementCards';
+import MeasurementGraph from '@/components/MeasurementGraph';
 import IconAlertCircle from '@/assets/images/IconAlertCircle.svg?react';
 import { useState } from 'react';
 

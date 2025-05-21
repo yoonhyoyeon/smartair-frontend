@@ -6,6 +6,11 @@ import IconMore from '@/assets/images/IconMore.svg?react';
 import logo from '@/assets/images/logo_simple.svg';
 
 const NavigationBar = () => {
+    const handleLogout = () => {
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('refreshToken');
+        navigate('/login');
+    };
     return (
         <nav className={styles.navigationBar}>
             <Link to="/home">
@@ -28,21 +33,21 @@ const NavigationBar = () => {
                 >
                     <li>
                         <IconAnalyze />
-                        <span>통계</span>
+                        <span>분석</span>
                     </li>
                 </NavLink>
 
                 <NavLink
-                    to="/more"
+                    to="/management"
                     className={({ isActive }) => isActive ? styles.active : ''}
                 >
                     <li>
                         <IconMore />
-                        <span>더보기</span>
+                        <span>관리</span>
                     </li>
                 </NavLink>
             </ul>
-            <Link to="/setting" className={styles.setting}>계정 설정</Link>
+            <span onClick={handleLogout} className={styles.setting}>로그아웃</span>
         </nav>
     )
 }

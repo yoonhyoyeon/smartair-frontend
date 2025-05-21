@@ -9,7 +9,14 @@ const DeviceStatus = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const response = await fetch(`/api/thinq/devices/${roomId}`);
+            const response = await fetch(`/api/thinq/devices/${roomId}`, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'accept': '*/*',
+                    'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+                },
+                credentials: 'include'
+            });
             const data = await response.json();
             setData(data);
             console.log(data);

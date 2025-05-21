@@ -37,5 +37,6 @@
     border-right: 1px solid #2D2D2D;
 }
 .container .content .right {
+    padding-left: 20px;
     flex: 1;
 }
