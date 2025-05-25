@@ -32,3 +32,39 @@
     margin:0;
     margin-right: 12px;
 }
+.selectRow {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.selectBox {
+  background: #232328;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 32px 40px 24px 24px;
+  font-size: 1.2rem;
+  appearance: none;
+  position: relative;
+  min-width: 180px;
+  outline: none;
+  /* 화살표 커스텀 */
+  background-image: url("data:image/svg+xml,%3Csvg width='24' height='24' fill='none' stroke='%23fff' stroke-width='2' viewBox='0 0 24 24'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 24px center;
+  background-size: 24px 24px;
+  cursor: pointer;
+}
+
+.container .select_area {
+    margin-bottom: 20px;
+}
+.container .select_area select {
+    color: #E4E6EA;
+    background-color: #202024;
+    border: 0;
+    border-radius: 4px;
+    padding: 10px 20px;
+    margin-right: 10px;
+}

@@ -9,8 +9,14 @@ const Card = ({ title, value, high, low, color }) => {
                 <CountUp end={value} duration={1} />
             </span>
             <div className={styles.sub_value}>
-                <span>H: {high}</span>
-                <span>L: {low}</span>
+                {
+                    high && low && (
+                        <>
+                            <span>H: {high}</span>
+                            <span>L: {low}</span>
+                        </>
+                    )
+                }
             </div>
         </div>
     );

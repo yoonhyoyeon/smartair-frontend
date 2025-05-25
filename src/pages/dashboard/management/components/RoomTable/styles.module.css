@@ -1,0 +1,128 @@
+.table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: #27272D;
+  border-radius: 12px;
+  overflow: hidden;
+  color: #f1f5f9;
+  box-shadow: 0 2px 8px 0 #0002;
+}
+
+.table th,
+.table td {
+  padding: 16px 12px;
+  text-align: left;
+}
+
+.table th {
+  background: #23232a;
+  color: #a3a3b3;
+  font-weight: 600;
+}
+
+
+.table th:nth-child(1),
+.table td:nth-child(1) {
+  width: 40%;
+  min-width: 120px;
+}
+
+.table th:nth-child(2),
+.table td:nth-child(2) {
+  width: 15%;
+  min-width: 80px;
+  text-align: center;
+}
+
+.table th:nth-child(3),
+.table td:nth-child(3) {
+  width: 15%;
+  min-width: 80px;
+  text-align: center;
+}
+
+.table th:nth-child(4),
+.table td:nth-child(4) {
+  text-align: center;
+  width: 15%;
+  min-width: 140px;
+}
+
+.table tbody tr:first-child td {
+  border-top: 2.5px solid #444;
+}
+
+.table td {
+  background: #27272D;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+}
+
+.iconButton {
+  padding: 6px;
+  border: none;
+  background: #23232a;
+  color: #a3a3b3;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 18px;
+  transition: background 0.2s, color 0.2s;
+}
+.iconButton:hover {
+  background: #2563eb;
+  color: #fff;
+}
+
+.clickableRow {
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.clickableRow:hover,
+.clickableRow:focus {
+  background: #232328;
+}
+
+/* 행 hover/focus 시 전체 셀 배경 어둡게 */
+.clickableRow:hover td,
+.clickableRow:focus td {
+  background: #23232a;
+}
+
+/* 수정 버튼: 파란색 강조 */
+.editButton {
+  color: #2563eb;
+  background: none;
+  font-size: 1rem;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  transition: text-decoration 0.15s, color 0.15s;
+}
+.editButton:hover,
+.editButton:focus {
+  text-decoration: underline;
+  color: #1d4ed8;
+  background: none;
+}
+
+/* 삭제 버튼: 빨간색 강조 */
+.deleteButton {
+  color: #ef4444;
+  background: none;
+  font-size: 1rem;
+  border: none;
+  margin-left: 6px;
+  padding: 6px 12px;
+  border-radius: 4px;
+  transition: text-decoration 0.15s, color 0.15s;
+}
+.deleteButton:hover,
+.deleteButton:focus {
+  text-decoration: underline;
+  color: #b91c1c;
+  background: none;
+}

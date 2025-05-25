@@ -31,20 +31,15 @@ function Login() {
         credentials: 'include'
       });
       const data = await response.json();
-      
-      // localStorage에 토큰 저장
-      localStorage.setItem('accessToken', data.accessToken);
-      localStorage.setItem('refreshToken', data.refreshToken);
-      
-      // localStorage 저장 확인
-      const savedAccessToken = localStorage.getItem('accessToken');
-      const savedRefreshToken = localStorage.getItem('refreshToken');
-      
-      if (savedAccessToken && savedRefreshToken) {
-        // 저장이 확인되면 페이지 이동
+
+      // accessToken, refreshToken 모두 저장
+      if (data.accessToken && data.refreshToken) {
+        localStorage.setItem('accessToken', data.accessToken);
+        localStorage.setItem('refreshToken', data.refreshToken);
         navigate('/home');
       } else {
-        console.error('토큰 저장 실패');
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('refreshToken');
         alert('로그인 처리 중 오류가 발생했습니다. 다시 시도해주세요.');
       }
     } catch (error) {

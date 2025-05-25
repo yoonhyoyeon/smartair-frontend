@@ -1,60 +1,64 @@
 import styles from './index.module.css';
 import IconAlertCircle from '@/assets/images/IconAlertCircle.svg?react';
 import IconArrowRightCircle from '@/assets/images/IconArrowRightCircle.svg?react';
+import { useEffect, useState } from 'react';
+import fetchWithAuth from '@/api/fetchWithAuth';
 
-const data = [
-    {
-        roomName: '방1',
-        aqi: 10,
-        satisfaction: 50
-    },
-    {
-        roomName: '방2',
-        aqi: 20,
-        satisfaction: 30
-    },
-    {
-        roomName: '방3',
-        aqi: 30,
-        satisfaction: 70
-    },
-    {
-        roomName: '방4',
-        aqi: 40,
-        satisfaction: 40
-    },
-    {
-        roomName: '방5',
-        aqi: 50,
-        satisfaction: 60
-    },
-    {
-        roomName: '방6',
-        aqi: 60,
-        satisfaction: 80
-    },
-    {
-        roomName: '방7',
-        aqi: 70,
-        satisfaction: 90
-    },
-    {
-        roomName: '방8',
-        aqi: 80,
-        satisfaction: 100
-    },
-    {
-        roomName: '방9',
-        aqi: 90,
-        satisfaction: 100
-    },
-    {
-        roomName: '방10',
-        aqi: 100,
-        satisfaction: 100
-    }
-]
 const UserSatisfactionLog = () => {
+    const [logs, setLogs] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchLogs = async () => {
+            setLoading(true);
+            // 1. 방 목록 불러오기
+            const roomsRes = await fetchWithAuth('api/api/room/rooms');
+            const roomsData = await roomsRes.json();
+            const rooms = Array.isArray(roomsData) ? roomsData : roomsData.content || [];
+
+            // 2. 각 방의 만족도, AQI 병렬 fetch
+            const logPromises = rooms.map(async (room) => {
+                // 만족도
+                let satisfaction = '-';
+                try {
+                    const satRes = await fetch(`/api/userSatisfaction/${room.id}`,
+                        {
+                            headers: {
+                                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+                            }
+                        }
+                    );
+                    if (satRes.ok) {
+                        const satData = await satRes.json();
+                        satisfaction = satData.satisfaction ?? '-';
+                    }
+                } catch {}
+
+                // AQI
+                let aqi = '-';
+                try {
+                    const aqiRes = await fetchWithAuth(`/api/api/scores/room/${room.id}/latest`);
+                    if (aqiRes.ok) {
+                        const aqiData = await aqiRes.json();
+                        aqi = aqiData.overallScore ?? '-';
+                    }
+                } catch {}
+
+                return {
+                    roomName: room.name,
+                    aqi,
+                    satisfaction
+                };
+            });
+
+            const logs = await Promise.all(logPromises);
+            setLogs(logs);
+            setLoading(false);
+        };
+
+        fetchLogs();
+    }, []);
+
     return (
         <div className={styles.container}>
             <div className={styles.header}>
@@ -71,8 +75,12 @@ const UserSatisfactionLog = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {
-                        data.map((item, idx) => (
+                    {loading ? (
+                        <tr>
+                            <td colSpan={4}>로딩 중...</td>
+                        </tr>
+                    ) : (
+                        logs.map((item) => (
                             <tr key={item.roomName}>
                                 <td>{item.roomName}</td>
                                 <td>{item.aqi}</td>
@@ -80,7 +88,7 @@ const UserSatisfactionLog = () => {
                                 <td><IconArrowRightCircle /></td>
                             </tr>
                         ))
-                    }
+                    )}
                 </tbody>
             </table>
         </div>

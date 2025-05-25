@@ -1,0 +1,133 @@
+.overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(24, 24, 28, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.dialog {
+  background: #23232a;
+  border-radius: 12px;
+  padding: 32px 24px;
+  width: 100%;
+  max-width: 800px;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 4px 24px 0 #0006;
+  color: #f1f5f9;
+}
+
+.header {
+  margin-bottom: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.header h2 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #fff;
+  margin: 0;
+}
+.closeButton {
+  background: none;
+  border: none;
+  font-size: 22px;
+  color: #a3a3b3;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+}
+.closeButton:hover {
+  background: #31313a;
+  color: #fff;
+}
+
+.section {
+  margin-top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.section h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.addForm {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.input, .select {
+  padding: 10px 14px;
+  border: 1px solid #31313a;
+  border-radius: 6px;
+  background: #18181c;
+  color: #f1f5f9;
+  font-size: 15px;
+  flex: 1;
+}
+.input:focus, .select:focus {
+  outline: none;
+  border-color: #2563eb;
+}
+
+.addButton {
+  padding: 8px 16px;
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  transition: background 0.2s;
+}
+.addButton:hover {
+  background: #1d4ed8;
+}
+
+.table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: #23232a;
+  border-radius: 10px;
+  overflow: hidden;
+  color: #f1f5f9;
+  margin-top: 8px;
+}
+.table th, .table td {
+  padding: 12px 10px;
+  text-align: left;
+}
+.table th {
+  background: #23232a;
+  color: #a3a3b3;
+  font-weight: 600;
+  border-bottom: 1px solid #31313a;
+}
+.table tr:not(:last-child) td {
+  border-bottom: 1px solid #23232a;
+}
+.iconButton {
+  padding: 6px;
+  border: none;
+  background: #23232a;
+  color: #a3a3b3;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 18px;
+  transition: background 0.2s, color 0.2s;
+}
+.iconButton:hover {
+  background: #2563eb;
+  color: #fff;
+} 

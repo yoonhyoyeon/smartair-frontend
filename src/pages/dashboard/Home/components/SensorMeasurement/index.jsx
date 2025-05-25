@@ -2,11 +2,55 @@ import styles from './index.module.css';
 import MeasurementCards from '@/components/MeasurementCards';
 import MeasurementGraph from '@/components/MeasurementGraph';
 import IconAlertCircle from '@/assets/images/IconAlertCircle.svg?react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import fetchWithAuth from '@/api/fetchWithAuth';
 
 const SensorMeasurement = () => {
-    const [selectedDevice, setSelectedDevice] = useState('All');
-    const [selectedDate, setSelectedDate] = useState('RealTime');
+    const [rooms, setRooms] = useState([]);
+    const [selectedRoom, setSelectedRoom] = useState('');
+    const [sensors, setSensors] = useState([]);
+    const [selectedSensor, setSelectedSensor] = useState('');
+    const [measurement, setMeasurement] = useState(null);
+
+    // 방 목록 불러오기
+    useEffect(() => {
+        const fetchRooms = async () => {
+            const response = await fetchWithAuth('/api/api/room/rooms');
+            const data = await response.json();
+            const roomList = Array.isArray(data) ? data : data.content || [];
+            setRooms(roomList);
+            if (roomList.length > 0) setSelectedRoom(roomList[0].id);
+        };
+        fetchRooms();
+    }, []);
+
+    // 방 선택 시 센서(디바이스) 목록 불러오기
+    useEffect(() => {
+        if (!selectedRoom) return;
+        const fetchSensors = async () => {
+            const response = await fetchWithAuth(`/api/api/room/${selectedRoom}/sensors`);
+            const data = await response.json();
+            setSensors(data);
+            if (data.length > 0) setSelectedSensor(data[0].serialNumber || data[0].deviceId);
+        };
+        fetchSensors();
+    }, [selectedRoom]);
+
+    // 센서 선택 시 측정값 불러오기
+    useEffect(() => {
+        if (!selectedSensor) {
+            setMeasurement(null);
+            return;
+        }
+        const fetchMeasurement = async () => {
+            const response = await fetchWithAuth(`api/api/snapshots/latest/${selectedSensor}`);
+            const data = await response.json();
+            console.log(data);
+            setMeasurement(data);
+        };
+        fetchMeasurement();
+    }, [selectedSensor]);
+
     return (
         <div className={styles.container}>
             <div className={styles.header}>
@@ -14,28 +58,27 @@ const SensorMeasurement = () => {
                 <IconAlertCircle />
             </div>
             <div className={styles.select_area}>
-                <select value={selectedDevice} onChange={(e) => setSelectedDevice(e.target.value)}>
-                    <option value="All">All Devices</option>
-                    <option value="Device1">Device1</option>
-                    <option value="Device2">Device2</option>
-                    <option value="Device3">Device3</option>
+                <select value={selectedRoom} onChange={(e) => setSelectedRoom(e.target.value)}>
+                    {rooms.map(room => (
+                        <option key={room.id} value={room.id}>
+                            {room.name}
+                        </option>
+                    ))}
                 </select>
-                <select value={selectedDate} onChange={(e) => setSelectedDate(e.target.value)}>
-                    <option value="RealTime">Real Time</option>
-                    <option value="15m">Last 15m</option>
-                    <option value="1h">Last 1h</option>
-                    <option value="4h">Last 4h</option>
-                    <option value="24h">Last 24h</option>
-                    <option value="1week">Last 1 week</option>
-                    <option value="1month">Last 1 month</option>
+                <select value={selectedSensor} onChange={(e) => setSelectedSensor(e.target.value)}>
+                    {sensors.map(sensor => (
+                        <option key={sensor.serialNumber || sensor.deviceId} value={sensor.serialNumber || sensor.deviceId}>
+                            {sensor.name || sensor.alias || sensor.serialNumber || sensor.deviceId}
+                        </option>
+                    ))}
                 </select>
             </div>
             <div className={styles.content}>
                 <div className={styles.left}>
-                    <MeasurementCards />
+                    <MeasurementCards measurement={measurement} />
                 </div>
                 <div className={styles.right}>
-                    <MeasurementGraph />
+                    <MeasurementGraph serialNumber={selectedSensor} />
                 </div>
             </div>
         </div>

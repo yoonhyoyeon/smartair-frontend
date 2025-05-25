@@ -2,27 +2,36 @@ import styles from './index.module.css';
 import IconAlertCircle from '@/assets/images/IconAlertCircle.svg?react';
 import DeviceStatusItem from './DeviceStatusItem';
 import { useEffect, useState } from 'react';
+import fetchWithAuth from '@/api/fetchWithAuth';
 
 const DeviceStatus = () => {
-    const [data, setData] = useState([]);
-    const [roomId, setRoomId] = useState(817);
+    const [rooms, setRooms] = useState([]);
+    const [roomId, setRoomId] = useState('');
+    const [devices, setDevices] = useState([]);
 
+    // 방 목록 불러오기
     useEffect(() => {
-        const fetchData = async () => {
-            const response = await fetch(`/api/thinq/devices/${roomId}`, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'accept': '*/*',
-                    'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
-                },
-                credentials: 'include'
-            });
+        const fetchRooms = async () => {
+            const response = await fetchWithAuth('/api/api/room/rooms');
             const data = await response.json();
-            setData(data);
-            console.log(data);
+            const roomList = Array.isArray(data) ? data : data.content || [];
+            setRooms(roomList);
+            if (roomList.length > 0) setRoomId(roomList[0].id);
         };
-        fetchData();
+        fetchRooms();
+    }, []);
+
+    // 디바이스 목록 불러오기
+    useEffect(() => {
+        if (!roomId) return;
+        const fetchDevices = async () => {
+            const response = await fetchWithAuth(`/api/api/room/${roomId}/devices`);
+            const data = await response.json();
+            if(data.length >= 0) setDevices(data);
+        };
+        fetchDevices();
     }, [roomId]);
+
     return (
         <div className={styles.container}>
             <div className={styles.header}>
@@ -31,22 +40,25 @@ const DeviceStatus = () => {
             </div>
             <div className={styles.selectBox}>
                 <select value={roomId} onChange={(e) => setRoomId(e.target.value)}>
-                    <option value="817">817</option>
-                    <option value="818">818</option>
-                    <option value="819">819</option>
-                    <option value="820">820</option>
+                    {rooms.map(room => (
+                        <option key={room.id} value={room.id}>
+                            {room.name}
+                        </option>
+                    ))}
                 </select>
             </div>
             <div className={styles.content}>
-                <DeviceStatusItem isActive={true}/>
-                <DeviceStatusItem />
-                <DeviceStatusItem />
-                <DeviceStatusItem />
-                <DeviceStatusItem />
-                <DeviceStatusItem />
-                <DeviceStatusItem />
-                <DeviceStatusItem />
-                <DeviceStatusItem />
+                {devices.length === 0 ? (
+                    <div>기기가 없습니다.</div>
+                ) : (
+                    devices.map(device => (
+                        <DeviceStatusItem
+                            key={device.deviceId}
+                            isActive={true}
+                            device={device}
+                        />
+                    ))
+                )}
             </div>
         </div>
     );

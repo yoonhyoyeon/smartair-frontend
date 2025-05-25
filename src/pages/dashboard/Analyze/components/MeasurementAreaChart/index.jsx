@@ -39,7 +39,7 @@ const variables = [
 ];
 
 const MeasurementAreaChart = () => {
-    const [selectedData, setSelectedData] = useState(['co2', 'pm2.5']);
+    const [selectedData, setSelectedData] = useState(['co2', 'pm2.5', 'temp', 'pm10']);
 
     const handleCheckboxChange = (key) => {
         setSelectedData(prev => {

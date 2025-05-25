@@ -1,39 +1,97 @@
 import styles from './index.module.css';
 import Card from './Card';
 
-const MeasurementCards = () => {
-    const dummyData = [
-        { title: 'PM2.5', value: 12.3, high: 30.0, low: 8.2, color: 'yellow' },
-        { title: 'PM2.5', value: 35.7, high: 46.0, low: 15.4, color: 'green' },
-        { title: 'PM2.5', value: 48.1, high: 52.0, low: 20.0, color: 'red' },
-        { title: 'PM2.5', value: 22.5, high: 40.0, low: 10.0, color: 'yellow' },
-        { title: 'PM2.5', value: 18.9, high: 28.0, low: 9.5, color: 'yellow' },
-        { title: 'PM2.5', value: 29.4, high: 38.0, low: 12.1, color: 'green' },
-        { title: 'PM2.5', value: 41.2, high: 50.0, low: 18.7, color: 'red' },
-        { title: 'PM2.5', value: 16.8, high: 25.0, low: 7.9, color: 'green' },
-        { title: 'PM2.5', value: 27.6, high: 36.0, low: 11.3, color: 'green' },
-    ];
+const mainLabelMap = [
+  { key: 'temperature', label: '온도(℃)' },
+  { key: 'humidity', label: '습도(%)' },
+];
+const subLabelMap = [
+  { key: 'pressure', label: '기압(hPa)' },
+  { key: 'eco2', label: 'eCO₂(ppm)' },
+  { key: 'tvoc', label: 'TVOC(ppb)' },
+  { key: 'rawh2', label: 'Raw H₂' },
+  { key: 'rawethanol', label: 'Raw Ethanol' },
+  { key: 'pt1_pm10_standard', label: 'PT1 PM10' },
+  { key: 'pt1_pm25_standard', label: 'PT1 PM2.5' },
+  { key: 'pt2_pm10_standard', label: 'PT2 PM10' },
+  { key: 'pt2_pm25_standard', label: 'PT2 PM2.5' },
+];
 
-    return (
-        <div className={styles.container}>
-            <div className={styles.main_area}>
-                <Card title="PM2.5" value={24.8} high={46.0} low={12.0} color="yellow" />
-                <Card title="CO2" value={619} high={1659} low={487} color="green"/>
-            </div>
-            <div className={styles.sub_area}>
-                {dummyData.map((item, idx) => (
-                    <Card
-                        key={item.title+idx}
-                        title={item.title}
-                        value={item.value}
-                        high={item.high}
-                        low={item.low}
-                        color={item.color}
-                    />
-                ))}
-            </div>
-        </div>
-    );
+// 수치에 따라 색상 결정
+function getColor(key, value) {
+  if (value === undefined || value === null || value === '-') return 'gray';
+  switch (key) {
+    case 'temperature':
+      if (value < 18) return 'blue';
+      if (value <= 27) return 'green';
+      if (value <= 30) return 'yellow';
+      return 'red';
+    case 'humidity':
+      if (value < 30) return 'yellow';
+      if (value <= 60) return 'green';
+      if (value <= 80) return 'yellow';
+      return 'red';
+    case 'pressure':
+      if (value < 980) return 'yellow';
+      if (value <= 1030) return 'green';
+      return 'red';
+    case 'eco2':
+      if (value < 800) return 'green';
+      if (value < 1200) return 'yellow';
+      return 'red';
+    case 'tvoc':
+      if (value < 300) return 'green';
+      if (value < 600) return 'yellow';
+      return 'red';
+    case 'rawh2':
+    case 'rawethanol':
+      if (value < 50) return 'green';
+      if (value < 100) return 'yellow';
+      return 'red';
+    case 'pt1_pm10_standard':
+    case 'pt2_pm10_standard':
+      if (value < 30) return 'green';
+      if (value < 80) return 'yellow';
+      return 'red';
+    case 'pt1_pm25_standard':
+    case 'pt2_pm25_standard':
+      if (value < 15) return 'green';
+      if (value < 35) return 'yellow';
+      return 'red';
+    default:
+      return 'gray';
+  }
+}
+
+const MeasurementCards = ({ measurement }) => {
+  if (!measurement) {
+    return <div>데이터 없음</div>;
+  }
+
+  return (
+    <div className={styles.container}>
+      <div className={styles.main_area}>
+        {mainLabelMap.map(({ key, label }) => (
+          <Card
+            key={key}
+            title={label}
+            value={measurement[key] !== undefined ? measurement[key] : '-'}
+            color={getColor(key, measurement[key])}
+          />
+        ))}
+      </div>
+      <div className={styles.sub_area}>
+        {subLabelMap.map(({ key, label }) => (
+          <Card
+            key={key}
+            title={label}
+            value={measurement[key] !== undefined ? measurement[key] : '-'}
+            color={getColor(key, measurement[key])}
+          />
+        ))}
+      </div>
+    </div>
+  );
 };
 
 export default MeasurementCards;
