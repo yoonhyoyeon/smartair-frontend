@@ -36,19 +36,22 @@ const SensorMeasurement = () => {
         fetchSensors();
     }, [selectedRoom]);
 
-    // 센서 선택 시 측정값 불러오기
+    // 센서 선택 시 측정값 불러오기 (2초마다 polling)
     useEffect(() => {
         if (!selectedSensor) {
             setMeasurement(null);
             return;
         }
+        let timerId;
         const fetchMeasurement = async () => {
-            const response = await fetchWithAuth(`api/api/snapshots/latest/${selectedSensor}`);
+            const response = await fetchWithAuth(`/api/api/snapshots/latest/${selectedSensor}`);
             const data = await response.json();
-            console.log(data);
+            console.log('latest data', data);
             setMeasurement(data);
         };
-        fetchMeasurement();
+        fetchMeasurement(); // 최초 1회
+        timerId = setInterval(fetchMeasurement, 2000);
+        return () => clearInterval(timerId);
     }, [selectedSensor]);
 
     return (
