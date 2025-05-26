@@ -52,6 +52,8 @@ const DashboardAnalyze = () => {
         };
         fetchMeasurement();
     }, [selectedSensor]);
+    
+
 
     return (
         <div className={styles.container}>
@@ -84,7 +86,7 @@ const DashboardAnalyze = () => {
                         <h1>변화</h1>
                         <IconAlertCircle />
                     </div>
-                    <MeasurementGraph />
+                    <MeasurementGraph serialNumber={selectedSensor} />
                 </div>
             </div>
             <div className={styles.row}>
@@ -93,14 +95,14 @@ const DashboardAnalyze = () => {
                         <h1>상관관계</h1>
                         <IconAlertCircle />
                     </div>
-                    <MeasurementScatter />
+                    <MeasurementScatter serialNumber={selectedSensor} />
                 </div>
                 <div className={styles.itemWrapper}>
                     <div className={styles.header}>
                         <h1>비율</h1>
                         <IconAlertCircle />
                     </div>
-                    <MeasurementAreaChart />
+                    <MeasurementAreaChart serialNumber={selectedSensor} />
                 </div>
             </div>
         </div>
