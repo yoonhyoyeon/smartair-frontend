@@ -1,37 +1,26 @@
 import styles from './index.module.css';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import fetchWithAuth from '@/api/fetchWithAuth';
 
 const variables = [
-    { key: 'pm25Score', label: 'PM2.5 점수', color: '#5382F7', yAxisId: 'left' },
-    { key: 'pm10Score', label: 'PM10 점수', color: '#FF8042', yAxisId: 'left' },
-    { key: 'eco2Score', label: 'CO2 점수', color: '#82ca9d', yAxisId: 'right' },
-    { key: 'tvocScore', label: 'TVOC 점수', color: '#8884d8', yAxisId: 'right' },
+    { key: 'hourlyAvgPm25', label: 'PM2.5', color: '#5382F7', yAxisId: 'left' },
+    { key: 'hourlyAvgPm10', label: 'PM10', color: '#FF8042', yAxisId: 'left' },
+    { key: 'hourlyAvgEco2', label: 'CO2', color: '#82ca9d', yAxisId: 'right' },
+    { key: 'hourlyAvgTvoc', label: 'TVOC', color: '#8884d8', yAxisId: 'left' },
     { key: 'hourlyAvgTemperature', label: '온도(℃)', color: '#F7B801', yAxisId: 'left' },
     { key: 'hourlyAvgHumidity', label: '습도(%)', color: '#00C49F', yAxisId: 'left' },
+    { key: 'hourlyAvgPressure', label: '기압(hPa)', color: '#00C49F', yAxisId: 'right' },
     // 필요시 추가
 ];
-
-function getLast24Hours() {
-    const arr = [];
-    const now = new Date();
-    now.setMinutes(0, 0, 0);
-    for (let i = 23; i >= 0; i--) {
-        const d = new Date(now);
-        d.setHours(now.getHours() - i);
-        arr.push({
-            label: d.getHours().toString().padStart(2, '0') + ':00',
-            snapshotHour: d.toISOString().slice(0, 19)
-        });
-    }
-    return arr;
-}
 
 const MeasurementGraph = ({ serialNumber }) => {
     const [data, setData] = useState([]);
     const [selectedData, setSelectedData] = useState(variables.map(v => v.key));
     const [loading, setLoading] = useState(false);
+    const allSelected = selectedData.length === variables.length;
+    const someSelected = selectedData.length > 0 && selectedData.length < variables.length;
+    const allCheckboxRef = useRef(null);
 
     // 체크박스 핸들러
     const handleCheckboxChange = (key) => {
@@ -41,27 +30,65 @@ const MeasurementGraph = ({ serialNumber }) => {
     };
 
     useEffect(() => {
+        if (allCheckboxRef.current) {
+            allCheckboxRef.current.indeterminate = someSelected;
+        }
+    }, [someSelected]);
+
+    useEffect(() => {
         if (!serialNumber) return;
         setLoading(true);
-        const hours = getLast24Hours();
-        Promise.all(
-            hours.map(async ({ label, snapshotHour }) => {
-                const response = await fetchWithAuth(`/api/api/snapshots/${serialNumber}/${snapshotHour}`);
-                if (!response.ok) return { label, snapshotHour, error: true };
+        // 최근 24시간 구간 계산
+        const now = new Date();
+        const end = new Date(now);
+        end.setMinutes(0, 0, 0); // 정각
+        const endTime = end.toISOString().slice(0, 19);
+        const start = new Date(end);
+        start.setHours(end.getHours() - 100); // 24시간 전
+        const startTime = start.toISOString().slice(0, 19);
+
+        fetchWithAuth(`/api/api/snapshots/${serialNumber}/${startTime}/${endTime}`)
+            .then(async response => {
+                if (!response.ok) throw new Error('데이터 조회 실패');
                 const result = await response.json();
-                // result가 HourlySensorAirQualitySnapshotResponse 객체라고 가정
-                return { label, snapshotHour, ...result };
+                // result가 배열(시간별 스냅샷)이라고 가정
+                // label(시, 예: 14:00) 필드 추가
+                console.log('/api/snapshots/${serialNumber}/${startTime}/${endTime}', result);
+                const dataWithLabel = result.map(item => {
+                    const date = new Date(item.snapshotHour);
+                    return {
+                        ...item,
+                        label: date.getHours().toString().padStart(2, '0') + ':00',
+                    };
+                });
+                setData(dataWithLabel);
             })
-        ).then(results => {
-            setData(results);
-            setLoading(false);
-        });
+            .catch((error) => {
+                console.error('데이터 조회 실패:', error);
+                setData([]);
+            })
+            .finally(() => setLoading(false));
     }, [serialNumber]);
 
     return (
         <div className={styles.container}>
             <div className={styles.header}>
                 <div className={styles.checkboxGroup}>
+                    <label className={styles.checkbox}>
+                        <input
+                            type="checkbox"
+                            ref={allCheckboxRef}
+                            checked={allSelected}
+                            onChange={e => {
+                                if (e.target.checked) {
+                                    setSelectedData(variables.map(v => v.key));
+                                } else {
+                                    setSelectedData([]);
+                                }
+                            }}
+                        />
+                        <span className={styles.checkboxLabel}>전체 선택</span>
+                    </label>
                     {variables.map(variable => (
                         <label key={variable.key} className={styles.checkbox}>
                             <input

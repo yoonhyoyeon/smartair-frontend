@@ -30,16 +30,15 @@ function Login() {
         body: JSON.stringify({ email, password }),
         credentials: 'include'
       });
-      const data = await response.json();
 
-      // accessToken, refreshToken 모두 저장
-      if (data.accessToken && data.refreshToken) {
-        localStorage.setItem('accessToken', data.accessToken);
-        localStorage.setItem('refreshToken', data.refreshToken);
+      // accessToken을 헤더에서 추출
+      const accessToken = response.headers.get('access') || response.headers.get('Authorization');
+      if (accessToken) {
+        localStorage.setItem('accessToken', accessToken);
+        // refreshToken은 쿠키로 오므로 따로 저장하지 않음
         navigate('/home');
       } else {
         localStorage.removeItem('accessToken');
-        localStorage.removeItem('refreshToken');
         alert('로그인 처리 중 오류가 발생했습니다. 다시 시도해주세요.');
       }
     } catch (error) {

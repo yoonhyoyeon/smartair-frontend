@@ -20,19 +20,16 @@ const UserSatisfactionLog = () => {
             const logPromises = rooms.map(async (room) => {
                 // 만족도
                 let satisfaction = '-';
-                try {
-                    const satRes = await fetch(`/api/userSatisfaction/${room.id}`,
-                        {
-                            headers: {
-                                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
-                            }
-                        }
-                    );
-                    if (satRes.ok) {
-                        const satData = await satRes.json();
-                        satisfaction = satData.satisfaction ?? '-';
-                    }
-                } catch {}
+                // try {
+                //     const satRes = await fetchWithAuth(`/api/userSatisfaction/${room.id}`);
+                //     if (satRes.ok) {
+                //         const satData = await satRes.json();
+                //         // satData가 배열(최신 7개) → 가장 마지막 값 사용
+                //         if (Array.isArray(satData) && satData.length > 0) {
+                //             satisfaction = satData[satData.length - 1].satisfaction ?? '-';
+                //         }
+                //     }
+                // } catch {}
 
                 // AQI
                 let aqi = '-';
@@ -43,6 +40,7 @@ const UserSatisfactionLog = () => {
                         aqi = aqiData.overallScore ?? '-';
                     }
                 } catch {}
+                
 
                 return {
                     roomName: room.name,

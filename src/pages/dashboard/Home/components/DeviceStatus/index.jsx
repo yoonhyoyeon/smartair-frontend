@@ -25,8 +25,9 @@ const DeviceStatus = () => {
     useEffect(() => {
         if (!roomId) return;
         const fetchDevices = async () => {
-            const response = await fetchWithAuth(`/api/api/room/${roomId}/devices`);
+            const response = await fetchWithAuth(`/api/thinq/devices/all/${roomId}`);
             const data = await response.json();
+            console.log(data);
             if(data.length >= 0) setDevices(data);
         };
         fetchDevices();

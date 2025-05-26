@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styles from './styles.module.css';
 
-const RoomCreateDialog = ({
+const RoomJoinDialog = ({
   isOpen,
   onOpenChange,
   onRefresh,
@@ -118,4 +118,4 @@ const RoomCreateDialog = ({
   );
 };
 
-export default RoomCreateDialog; 
+export default RoomJoinDialog; 

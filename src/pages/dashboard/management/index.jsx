@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styles from './index.module.css';
 import RoomTable from './components/RoomTable';
 import RoomCreateDialog from './components/RoomCreateDialog';
+import RoomJoinDialog from './components/RoomJoinDialog';
 import RoomDetailDialog from './components/RoomDetailDialog';
 import IconAlertCircle from '@/assets/images/IconAlertCircle.svg?react';
 import fetchWithAuth from '@/api/fetchWithAuth';
@@ -159,6 +160,12 @@ const DashboardManagement = () => {
       <RoomCreateDialog
         isOpen={isCreateRoomOpen}
         onOpenChange={setIsCreateRoomOpen}
+        onRefresh={fetchRooms}
+      />
+
+      <RoomJoinDialog
+        isOpen={isJoinRoomOpen}
+        onOpenChange={setIsJoinRoomOpen}
         onRefresh={fetchRooms}
       />
 

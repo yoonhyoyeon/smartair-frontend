@@ -27,7 +27,7 @@
     border-radius: 4px;
     padding: 20px;
     cursor: pointer;
-    transition: color 0.3s ease;
+    transition: color 0.3s ease, background 0.3s;
 }
 .container .content .DeviceStatusItem:hover {
     color: #aeaeae;
@@ -73,4 +73,20 @@
     border-radius: 4px;
     padding: 10px 20px;
     margin-right: 10px;
+}
+
+.loading {
+    color: #E6E6E6;
+    background: linear-gradient(90deg, var(--color-blue-0) 0%, #578cff 50%, var(--color-blue-0) 100%);
+    background-size: 200% 100%;
+    animation: loadingGradient 5s linear infinite;
+}
+
+@keyframes loadingGradient {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
 }
