@@ -59,14 +59,15 @@ const fetchWithAuth = async (url, options = {}) => {
                 retryHeaders['Authorization'] = 'Bearer ' + token;
                 return fetch(url, { ...options, headers: retryHeaders, credentials: 'include', _retry: true });
             } else {
+                alert('토큰 갱신에 실패: 유효한 토큰형식이 아님');
                 localStorage.removeItem('accessToken');
                 window.location.href = '/login';
                 return;
             }
         } else {
-            alert('토큰 갱신에 실패했습니다. 다시 로그인 해주세요.');
-            localStorage.removeItem('accessToken');
-            window.location.href = '/login';
+            alert('토큰 갱신에 실패: api 요청 실패');
+            // localStorage.removeItem('accessToken');
+            // window.location.href = '/login';
             return;
         }
     }

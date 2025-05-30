@@ -81,7 +81,7 @@ const UserSatisfactionLog = () => {
                         logs.map((item) => (
                             <tr key={item.roomName}>
                                 <td>{item.roomName}</td>
-                                <td>{item.aqi}</td>
+                                <td>{item.aqi.toFixed(1)}</td>
                                 <td>{item.satisfaction}</td>
                                 <td><IconArrowRightCircle /></td>
                             </tr>

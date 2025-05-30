@@ -39,26 +39,25 @@ const MeasurementGraph = ({ serialNumber }) => {
         if (!serialNumber) return;
         setLoading(true);
         // 최근 24시간 구간 계산
-        const now = new Date();
-        const end = new Date(now);
-        end.setMinutes(0, 0, 0); // 정각
+        const offset = new Date().getTimezoneOffset() * 60000;
+        const end = new Date(Date.now() - offset);
         const endTime = end.toISOString().slice(0, 19);
         const start = new Date(end);
-        start.setHours(end.getHours() - 100); // 24시간 전
+        start.setHours(end.getHours() - 24); // 24시간 전
         const startTime = start.toISOString().slice(0, 19);
 
-        fetchWithAuth(`/api/api/snapshots/${serialNumber}/${startTime}/${endTime}`)
+        fetchWithAuth(`/api/api/snapshots/${serialNumber}?startTime=${startTime}&endTime=${endTime}`)
             .then(async response => {
                 if (!response.ok) throw new Error('데이터 조회 실패');
                 const result = await response.json();
                 // result가 배열(시간별 스냅샷)이라고 가정
                 // label(시, 예: 14:00) 필드 추가
-                console.log('/api/snapshots/${serialNumber}/${startTime}/${endTime}', result);
+                console.log(startTime, endTime, result);
                 const dataWithLabel = result.map(item => {
                     const date = new Date(item.snapshotHour);
                     return {
                         ...item,
-                        label: date.getHours().toString().padStart(2, '0') + ':00',
+                        label: date.toLocaleString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }),
                     };
                 });
                 setData(dataWithLabel);
@@ -113,7 +112,13 @@ const MeasurementGraph = ({ serialNumber }) => {
                             <XAxis stroke="#E6E6E6" dataKey="label" />
                             <YAxis stroke="#E6E6E6" yAxisId="left" />
                             <YAxis stroke="#E6E6E6" yAxisId="right" orientation="right" />
-                            <Tooltip />
+                            <Tooltip 
+                                formatter={(value, name) => {
+                                    const variable = variables.find(v => v.key === name);
+                                    const unit = variable?.unit ? ` (${variable.unit})` : '';
+                                    return [Number(value).toFixed(2), `${variable?.label || name}${unit}`];
+                                }}
+                            />
                             {selectedData.map(key => {
                                 const variable = variables.find(v => v.key === key);
                                 return (

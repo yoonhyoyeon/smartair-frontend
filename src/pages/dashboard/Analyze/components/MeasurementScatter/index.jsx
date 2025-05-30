@@ -15,7 +15,7 @@ const variables = [
 
 const getUnit = (key) => variables.find(v => v.key === key)?.unit || '';
 
-const MeasurementScatter = ({ serialNumber, startTime, endTime }) => {
+const MeasurementScatter = ({ serialNumber }) => {
     const [xAxis, setXAxis] = useState('hourlyAvgTemperature');
     const [yAxis, setYAxis] = useState('hourlyAvgPm25');
     const [data, setData] = useState([]);
@@ -24,26 +24,36 @@ const MeasurementScatter = ({ serialNumber, startTime, endTime }) => {
     useEffect(() => {
         if (!serialNumber) return;
         setLoading(true);
-        let start = startTime, end = endTime;
-        if (!start || !end) {
-            const now = new Date();
-            const endDate = new Date(now);
-            endDate.setMinutes(0, 0, 0);
-            end = endDate.toISOString().slice(0, 19);
-            const startDate = new Date(endDate);
-            startDate.setHours(endDate.getHours() - 100);
-            start = startDate.toISOString().slice(0, 19);
-        }
-        fetchWithAuth(`/api/api/snapshots/${serialNumber}/${start}/${end}`)
-            .then(async res => {
-                if (!res.ok) throw new Error('데이터 조회 실패');
-                const arr = await res.json();
-                setData(arr);
-                console.log(arr);
+        // 최근 24시간 구간 계산
+        const offset = new Date().getTimezoneOffset() * 60000;
+        const end = new Date(Date.now() - offset);
+        const endTime = end.toISOString().slice(0, 19);
+        const start = new Date(end);
+        start.setHours(end.getHours() - 24); // 24시간 전
+        const startTime = start.toISOString().slice(0, 19);
+
+        fetchWithAuth(`/api/api/snapshots/${serialNumber}?startTime=${startTime}&endTime=${endTime}`)
+            .then(async response => {
+                if (!response.ok) throw new Error('데이터 조회 실패');
+                const result = await response.json();
+                // result가 배열(시간별 스냅샷)이라고 가정
+                // label(시, 예: 14:00) 필드 추가
+                console.log(startTime, endTime, result);
+                const dataWithLabel = result.map(item => {
+                    const date = new Date(item.snapshotHour);
+                    return {
+                        ...item,
+                        time: date.toLocaleString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }),
+                    };
+                });
+                setData(dataWithLabel);
             })
-            .catch(() => setData([]))
+            .catch((error) => {
+                console.error('데이터 조회 실패:', error);
+                setData([]);
+            })
             .finally(() => setLoading(false));
-    }, [serialNumber, startTime, endTime]);
+    }, [serialNumber]);
 
     return (
         <div className={styles.container}>
@@ -89,11 +99,12 @@ const MeasurementScatter = ({ serialNumber, startTime, endTime }) => {
                                 domain={['dataMin - 1', 'dataMax + 1']}
                             />
                             <Tooltip
-                                cursor={{ strokeDasharray: '3 3' }}
                                 formatter={(value, name) => {
-                                    const unit = getUnit(name);
-                                    return [value, `${name} (${unit})`];
+                                    const variable = variables.find(v => v.key === name);
+                                    const unit = variable?.unit ? ` (${variable.unit})` : '';
+                                    return [Number(value).toFixed(2), `${variable?.label || name}${unit}`];
                                 }}
+                                cursor={{ strokeDasharray: '3 3' }}
                             />
                             <Scatter name="측정값" data={data} fill="#5382F7">
                                 {data.map((entry, idx) => (

@@ -12,7 +12,7 @@ const variables = [
 
 const toPercent = (decimal) => `${(decimal * 100).toFixed(0)}%`;
 
-const MeasurementAreaChart = ({ serialNumber, startTime, endTime }) => {
+const MeasurementAreaChart = ({ serialNumber }) => {
     const [selectedData, setSelectedData] = useState(variables.map(v => v.key));
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -20,17 +20,14 @@ const MeasurementAreaChart = ({ serialNumber, startTime, endTime }) => {
     useEffect(() => {
         if (!serialNumber) return;
         setLoading(true);
-        let start = startTime, end = endTime;
-        if (!start || !end) {
-            const now = new Date();
-            const endDate = new Date(now);
-            endDate.setMinutes(0, 0, 0);
-            end = endDate.toISOString().slice(0, 19);
-            const startDate = new Date(endDate);
-            startDate.setHours(endDate.getHours() - 100);
-            start = startDate.toISOString().slice(0, 19);
-        }
-        fetchWithAuth(`/api/api/snapshots/${serialNumber}/${start}/${end}`)
+        const offset = new Date().getTimezoneOffset() * 60000;
+        const end = new Date(Date.now() - offset);
+        const endTime = end.toISOString().slice(0, 19);
+        const start = new Date(end);
+        start.setHours(end.getHours() - 24); // 24시간 전
+        const startTime = start.toISOString().slice(0, 19);
+
+        fetchWithAuth(`/api/api/snapshots/${serialNumber}?startTime=${startTime}&endTime=${endTime}`)
             .then(async res => {
                 if (!res.ok) throw new Error('데이터 조회 실패');
                 const arr = await res.json();
@@ -39,14 +36,14 @@ const MeasurementAreaChart = ({ serialNumber, startTime, endTime }) => {
                     const date = new Date(item.snapshotHour);
                     return {
                         ...item,
-                        time: date.getHours().toString().padStart(2, '0') + ':00'
+                        time: date.toLocaleString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })
                     };
                 });
                 setData(processed);
             })
             .catch(() => setData([]))
             .finally(() => setLoading(false));
-    }, [serialNumber, startTime, endTime]);
+    }, [serialNumber]);
 
     const handleCheckboxChange = (key) => {
         setSelectedData(prev =>
