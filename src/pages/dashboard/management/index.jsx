@@ -47,7 +47,44 @@ const DashboardManagement = () => {
       );
       setRooms(roomsWithDetails);
     } catch (e) {
-      setRooms([]);
+      // 더미 데이터 생성
+      const dummyRooms = [
+        {
+          id: '1',
+          name: '거실',
+          sensors: [
+            { id: 'sensor1', serialNumber: 'SN001', name: '거실 센서 1' },
+            { id: 'sensor2', serialNumber: 'SN002', name: '거실 센서 2' }
+          ],
+          members: [
+            { id: 'user1', name: '홍길동', email: 'hong@example.com' },
+            { id: 'user2', name: '김철수', email: 'kim@example.com' }
+          ]
+        },
+        {
+          id: '2',
+          name: '침실',
+          sensors: [
+            { id: 'sensor3', serialNumber: 'SN003', name: '침실 센서 1' }
+          ],
+          members: [
+            { id: 'user1', name: '홍길동', email: 'hong@example.com' }
+          ]
+        },
+        {
+          id: '3',
+          name: '주방',
+          sensors: [
+            { id: 'sensor4', serialNumber: 'SN004', name: '주방 센서 1' },
+            { id: 'sensor5', serialNumber: 'SN005', name: '주방 센서 2' }
+          ],
+          members: [
+            { id: 'user1', name: '홍길동', email: 'hong@example.com' },
+            { id: 'user3', name: '이영희', email: 'lee@example.com' }
+          ]
+        }
+      ];
+      setRooms(dummyRooms);
     }
   };
 

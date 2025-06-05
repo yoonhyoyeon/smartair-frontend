@@ -22,6 +22,21 @@ const MeasurementGraph = ({ serialNumber }) => {
     const someSelected = selectedData.length > 0 && selectedData.length < variables.length;
     const allCheckboxRef = useRef(null);
 
+    const dummyGraphData = Array.from({ length: 24 }).map((_, i) => {
+        const label = `${String(i).padStart(2, '0')}:00`;
+        const rand = (min, max) => +(Math.random() * (max - min) + min).toFixed(1);
+        return {
+            label,
+            hourlyAvgPm25: rand(5, 35),         // PM2.5 (μg/m³)
+            hourlyAvgPm10: rand(10, 60),        // PM10 (μg/m³)
+            hourlyAvgEco2: rand(400, 900),      // CO2 (ppm)
+            hourlyAvgTvoc: rand(100, 400),      // TVOC (ppb)
+            hourlyAvgTemperature: rand(18, 28), // 온도(℃)
+            hourlyAvgHumidity: rand(30, 70),    // 습도(%)
+            hourlyAvgPressure: rand(990, 1025), // 기압(hPa)
+        };
+    });
+
     // 체크박스 핸들러
     const handleCheckboxChange = (key) => {
         setSelectedData(prev =>
@@ -64,7 +79,7 @@ const MeasurementGraph = ({ serialNumber }) => {
             })
             .catch((error) => {
                 console.error('데이터 조회 실패:', error);
-                setData([]);
+                setData(dummyGraphData);
             })
             .finally(() => setLoading(false));
     }, [serialNumber]);

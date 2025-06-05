@@ -14,14 +14,44 @@ const DashboardAnalyze = () => {
     const [selectedSensor, setSelectedSensor] = useState('');
     const [measurement, setMeasurement] = useState(null);
 
+    const dummyRooms = [
+      { id: 'dummy-room-1', name: '방 1' },
+      { id: 'dummy-room-2', name: '방 2' }
+    ];
+    const dummySensors = [
+      { serialNumber: 'dummy-sensor-1', name: '센서 1' },
+      { serialNumber: 'dummy-sensor-2', name: '센서 2' }
+    ];
+    const dummyMeasurement = {
+      temperature: 23.5,
+      humidity: 70,
+      pressure: 1310,
+      eco2: 480,
+      tvoc: 150,
+      rawh2: 60,
+      rawethanol: 80,
+      pt1_pm10_standard: 12,
+      pt1_pm25_standard: 8,
+      pt2_pm10_standard: 10,
+      pt2_pm25_standard: 19,
+    };
+
     // 방 목록 불러오기
     useEffect(() => {
         const fetchRooms = async () => {
-            const response = await fetchWithAuth('/api/api/room/rooms');
-            const data = await response.json();
-            const roomList = Array.isArray(data) ? data : data.content || [];
-            setRooms(roomList);
-            if (roomList.length > 0) setSelectedRoom(roomList[0].id);
+            try {
+                const response = await fetchWithAuth('/api/api/room/rooms');
+                if (!response.ok) throw new Error('API 실패');
+                const data = await response.json();
+                const roomList = Array.isArray(data) ? data : data.content || [];
+                setRooms(roomList.length > 0 ? roomList : dummyRooms);
+                if ((roomList.length > 0 ? roomList : dummyRooms).length > 0)
+                    setSelectedRoom((roomList.length > 0 ? roomList : dummyRooms)[0].id);
+            } catch (e) {
+                console.error(e);
+                setRooms(dummyRooms);
+                setSelectedRoom(dummyRooms[0].id);
+            }
         };
         fetchRooms();
     }, []);
@@ -30,10 +60,18 @@ const DashboardAnalyze = () => {
     useEffect(() => {
         if (!selectedRoom) return;
         const fetchSensors = async () => {
-            const response = await fetchWithAuth(`/api/api/room/${selectedRoom}/sensors`);
-            const data = await response.json();
-            setSensors(data);
-            if (data.length > 0) setSelectedSensor(data[0].serialNumber || data[0].deviceId);
+            try {
+                const response = await fetchWithAuth(`/api/api/room/${selectedRoom}/sensors`);
+                if (!response.ok) throw new Error('API 실패');
+                const data = await response.json();
+                setSensors(data.length > 0 ? data : dummySensors);
+                if ((data.length > 0 ? data : dummySensors).length > 0)
+                    setSelectedSensor((data.length > 0 ? data : dummySensors)[0].serialNumber || (data.length > 0 ? data : dummySensors)[0].deviceId);
+            } catch (e) {
+                console.error(e);
+                setSensors(dummySensors);
+                setSelectedSensor(dummySensors[0].serialNumber);
+            }
         };
         fetchSensors();
     }, [selectedRoom]);
@@ -45,10 +83,15 @@ const DashboardAnalyze = () => {
             return;
         }
         const fetchMeasurement = async () => {
-            const response = await fetchWithAuth(`api/api/snapshots/latest/${selectedSensor}`);
-            const data = await response.json();
-            console.log(data);
-            setMeasurement(data);
+            try {
+                const response = await fetchWithAuth(`api/api/snapshots/latest/${selectedSensor}`);
+                if (!response.ok) throw new Error('API 실패');
+                const data = await response.json();
+                setMeasurement(data);
+            } catch (e) {
+                console.error(e);
+                setMeasurement(dummyMeasurement);
+            }
         };
         fetchMeasurement();
     }, [selectedSensor]);

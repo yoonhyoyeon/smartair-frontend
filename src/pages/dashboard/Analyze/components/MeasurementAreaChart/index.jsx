@@ -17,6 +17,19 @@ const MeasurementAreaChart = ({ serialNumber }) => {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(false);
 
+    const dummyAreaData = Array.from({ length: 24 }).map((_, i) => {
+        const rand = (min, max) => +(Math.random() * (max - min) + min).toFixed(1);
+        const date = new Date();
+        date.setHours(i, 0, 0, 0);
+        return {
+            time: date.toLocaleString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }),
+            hourlyAvgPm25: rand(5, 35),
+            hourlyAvgPm10: rand(10, 60),
+            hourlyAvgEco2: rand(400, 900),
+            hourlyAvgTvoc: rand(100, 400),
+        };
+    });
+
     useEffect(() => {
         if (!serialNumber) return;
         setLoading(true);
@@ -41,7 +54,7 @@ const MeasurementAreaChart = ({ serialNumber }) => {
                 });
                 setData(processed);
             })
-            .catch(() => setData([]))
+            .catch(() => setData(dummyAreaData))
             .finally(() => setLoading(false));
     }, [serialNumber]);
 
